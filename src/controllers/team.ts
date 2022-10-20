@@ -1,32 +1,41 @@
 import { Response, Request } from "express";
 import { createTeamService, getTeamService } from "../services/team";
+import { handleHttp } from "../utils/error.handle";
 
 export const createTeam = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { name, rival, goalsConceded, goalsScored, date, points } = req.body;
-  
-  const info = {
-    name,
-    games: [
-      {
-        rival,
-        goalsConceded,
-        goalsScored,
-        date,
-        points,
-      },
-    ],
-  };
+  try {
+    const { name, rival, goalsConceded, goalsScored, date, points } = req.body;
 
-  const response = await createTeamService(info);
+    const info = {
+      name,
+      games: [
+        {
+          rival,
+          goalsConceded,
+          goalsScored,
+          date,
+          points,
+        },
+      ],
+    };
 
-  return res.status(201).json({ Msg: "Team created", response });
+    const response = await createTeamService(info);
+
+    return res.status(201).json({ Msg: "Team created", response });
+  } catch (error) {
+    return handleHttp(res, "Error when creating the team", error);
+  }
 };
 
 export const getTeam = async (_req: Request, res: Response) => {
-  const response = await getTeamService();
+  try {
+    const response = await getTeamService();
 
-  return res.status(200).json(response);
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleHttp(res, "Error when obtaining the teams", error);
+  }
 };
