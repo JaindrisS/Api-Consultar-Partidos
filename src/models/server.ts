@@ -1,5 +1,6 @@
 import express, { Application } from "express";
-import gamesRouters from "../v1/routers/games";
+import gamesRouters from "../v1/routers/team";
+import { dbConnect } from "../config/dbConnect";
 
 export default class Server {
   private app: Application;
@@ -13,6 +14,11 @@ export default class Server {
     this.port = process.env.PORT || "8080";
     this.middleware();
     this.router();
+    this.connectionDb();
+  }
+
+  async connectionDb() {
+    await dbConnect();
   }
 
   middleware() {
