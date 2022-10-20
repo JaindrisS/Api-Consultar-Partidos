@@ -7,6 +7,12 @@ const SchemaTeam = new Schema<Team>(
       type: String,
       required: true,
     },
+
+    status: {
+      type: Boolean,
+      default: true,
+    },
+
     games: [
       {
         rival: String,
