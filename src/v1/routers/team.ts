@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
-import { createTeam, getTeam } from "../../controllers/team";
-import { body } from "express-validator";
+import { addGame, createTeam, getTeam } from "../../controllers/team";
+import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
-import { nameTeamExists } from "../../utils/dbValidations";
+import { idTeam, nameTeamExists } from "../../utils/dbValidations";
 const app = Router();
 
 app
@@ -20,6 +20,19 @@ app
       validateField,
     ],
     createTeam
+  )
+  .put(
+    "/add-games/:id",
+    [
+      param("id", "Enter a valid id").isMongoId().custom(idTeam),
+      body("rival", "Enter a rival").notEmpty(),
+      body("goalsConceded", "Enter a value").isNumeric().notEmpty(),
+      body("goalsScored", "Enter a value").isNumeric().notEmpty(),
+      body("date", "Enter a date").isDate().notEmpty(),
+      body("points", "Enter points").isNumeric().notEmpty(),
+      validateField,
+    ],
+    addGame
   );
 
 export default app;
