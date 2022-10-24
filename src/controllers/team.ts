@@ -1,5 +1,9 @@
 import { Response, Request } from "express";
-import { createTeamService, getTeamService } from "../services/team";
+import {
+  createTeamService,
+  getTeamService,
+  addGameService,
+} from "../services/team";
 import { handleHttp } from "../utils/error.handle";
 
 export const createTeam = async (
@@ -38,4 +42,19 @@ export const getTeam = async (_req: Request, res: Response) => {
   } catch (error) {
     return handleHttp(res, "Error when obtaining the teams", error);
   }
+};
+
+export const addGame = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { rival, goalsConceded, goalsScored, date, points } = req.body;
+
+  const response = await addGameService(id, {
+    rival,
+    goalsConceded,
+    goalsScored,
+    date,
+    points,
+  });
+
+  return res.status(201).json(`Game with rival ${rival} added`);
 };
