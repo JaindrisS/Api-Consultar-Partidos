@@ -3,6 +3,7 @@ import {
   createTeamService,
   getTeamService,
   addGameService,
+  getLastGameService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
 
@@ -57,4 +58,12 @@ export const addGame = async (req: Request, res: Response) => {
   });
 
   return res.status(201).json(`Game with rival ${rival} added`);
+};
+
+export const getLastGame = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const response = await getLastGameService(id);
+
+  res.status(200).json(response);
 };
