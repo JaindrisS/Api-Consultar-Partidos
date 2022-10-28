@@ -4,6 +4,7 @@ import {
   getTeamService,
   addGameService,
   getLastGameService,
+  getGameByIdService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
 
@@ -64,6 +65,14 @@ export const getLastGame = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const response = await getLastGameService(id);
+
+  res.status(200).json(response);
+};
+
+export const getGameById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const response = await getGameByIdService(id);
 
   res.status(200).json(response);
 };
