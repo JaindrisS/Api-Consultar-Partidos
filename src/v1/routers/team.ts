@@ -4,6 +4,7 @@ import {
   createTeam,
   getTeam,
   getLastGame,
+  getGameById,
 } from "../../controllers/team";
 import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
@@ -12,6 +13,19 @@ const app = Router();
 
 app
   .get("/", getTeam)
+
+  .get(
+    "/:id",
+    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
+    getGameById
+  )
+
+  .get(
+    "/last-game/:id",
+    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
+    getLastGame
+  )
+
   .post(
     "/",
     [
@@ -28,6 +42,7 @@ app
     ],
     createTeam
   )
+
   .put(
     "/add-games/:id",
     [
@@ -45,11 +60,6 @@ app
       validateField,
     ],
     addGame
-  )
-  .get(
-    "/last-game/:id",
-    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
-    getLastGame
   );
 
 export default app;
