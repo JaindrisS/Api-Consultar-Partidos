@@ -57,3 +57,11 @@ export const getLastGameService = async (id: string) => {
 
   return response;
 };
+
+export const getGameByIdService = async (id: string) => {
+  const response = await TeamModel.findById(id);
+  if (response?.status === false) {
+    return `the team does not exist`;
+  }
+  return response;
+};
