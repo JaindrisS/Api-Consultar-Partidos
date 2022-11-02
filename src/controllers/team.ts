@@ -5,8 +5,10 @@ import {
   addGameService,
   getLastGameService,
   getGameByIdService,
+  getGameByDateService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
+// import { validateDate } from "../utils/validations";
 
 export const createTeam = async (
   req: Request,
@@ -47,32 +49,57 @@ export const getTeam = async (_req: Request, res: Response) => {
 };
 
 export const addGame = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { rival, goalsConceded, goalsScored, date, points } = req.body;
+  try {
+    const { id } = req.params;
+    const { rival, goalsConceded, goalsScored, date, points } = req.body;
 
-  const response = await addGameService(id, {
-    rival,
-    goalsConceded,
-    goalsScored,
-    date,
-    points,
-  });
+    const response = await addGameService(id, {
+      rival,
+      goalsConceded,
+      goalsScored,
+      date,
+      points,
+    });
 
-  return res.status(201).json(`Game with rival ${rival} added`);
+    return res.status(201).json(`Game with rival ${rival} added`);
+  } catch (error) {
+    return handleHttp(res, "Error when adding game", error);
+  }
 };
 
 export const getLastGame = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const response = await getLastGameService(id);
+    const response = await getLastGameService(id);
 
-  res.status(200).json(response);
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleHttp(res, "Error when obtaining the last game", error);
+  }
 };
 
 export const getGameById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const response = await getGameByIdService(id);
+    const response = await getGameByIdService(id);
 
-  res.status(200).json(response);
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleHttp(res, "Error when getting the game by id", error);
+  }
+};
+
+export const getGameByDate = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.body;
+
+    const response = await getGameByDateService(id, date);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleHttp(res, "Error when getting the game by date", error);
+  }
 };
