@@ -11,5 +11,3 @@ export interface Games {
   date: string;
   points: number;
 }
-
-interface newTeam {}
