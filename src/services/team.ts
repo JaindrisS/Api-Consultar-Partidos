@@ -65,3 +65,13 @@ export const getGameByIdService = async (id: string) => {
   }
   return response;
 };
+
+export const getGameByDateService = async (id: string, date: string) => {
+  const getGame = await TeamModel.findById(id);
+
+  const response = getGame?.games.filter((e) => {
+    return e.date === date;
+  });
+
+  return response;
+};
