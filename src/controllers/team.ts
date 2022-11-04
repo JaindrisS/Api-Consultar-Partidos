@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request, request } from "express";
 import {
   createTeamService,
   getTeamService,
@@ -6,6 +6,7 @@ import {
   getLastGameService,
   getGameByIdService,
   getGameByDateService,
+  getTeamThatScoredTheMostGoalsService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
 // import { validateDate } from "../utils/validations";
@@ -101,5 +102,24 @@ export const getGameByDate = async (req: Request, res: Response) => {
     return res.status(200).json(response);
   } catch (error) {
     return handleHttp(res, "Error when getting the game by date", error);
+  }
+};
+
+export const getTeamThatScoredTheMostGoals = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+
+    const response = await getTeamThatScoredTheMostGoalsService(id);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return handleHttp(
+      res,
+      "Error when getting the Team that scored the most goals",
+      error
+    );
   }
 };
