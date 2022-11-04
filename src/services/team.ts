@@ -75,3 +75,18 @@ export const getGameByDateService = async (id: string, date: string) => {
 
   return response;
 };
+
+export const getTeamThatScoredTheMostGoalsService = async (id: string) => {
+  // get team by id
+  const infoTeam = await TeamModel.findById(id);
+  // access to games
+  const gamesInfo = infoTeam?.games;
+  // return the team that scored the most goals
+  const goalsConcededMax: any = gamesInfo?.map((e) => e.goalsConceded);
+  const max: any = Math.max(...goalsConcededMax);
+  const majorScored = gamesInfo?.filter((e) => e.goalsConceded === max);
+
+  // return
+
+  return majorScored;
+};
