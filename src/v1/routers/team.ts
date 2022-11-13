@@ -7,6 +7,7 @@ import {
   getGameById,
   getGameByDate,
   getTeamThatScoredTheMostGoals,
+  gamesByDateRange,
 } from "../../controllers/team";
 import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
@@ -53,6 +54,19 @@ app
     "/team-that-scored-more-goals/:id",
     [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
     getTeamThatScoredTheMostGoals
+  )
+
+  .get(
+    "/games-by-date-range/:id",
+    [
+      param("id", "Enter a Valid id").custom(idTeam),
+      body("from").custom(validateDate),
+      body(["from", "to"], "Enter a valid date example: YYYY-MM-DD")
+        .notEmpty()
+        .isDate({ format: "YYYY-MM-DD", strictMode: true }),
+      validateField,
+    ],
+    gamesByDateRange
   )
 
   .post(
