@@ -8,6 +8,6 @@ export interface Games {
   rival: string;
   goalsConceded: number;
   goalsScored: number;
-  date: string;
+  date: Date;
   points: number;
 }
