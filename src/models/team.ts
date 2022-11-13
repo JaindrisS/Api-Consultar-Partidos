@@ -18,7 +18,7 @@ const SchemaTeam = new Schema<Team>(
         rival: String,
         goalsConceded: Number,
         goalsScored: Number,
-        date: String,
+        date: Date,
         points: Number,
       },
     ],
