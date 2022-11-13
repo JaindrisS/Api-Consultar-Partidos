@@ -3,6 +3,7 @@ import { TeamModel } from "../models/team";
 
 export const createTeamService = async (team: Team) => {
   const newTeam = new TeamModel(team);
+
   await newTeam.save();
   return newTeam;
 };
@@ -51,8 +52,8 @@ export const getLastGameService = async (id: string) => {
   const onlyDate = dateString.substring(0, 10);
 
   // return the match that is equal to the given date
-  const response = infoTeam?.games.filter((e) => {
-    return e.date === onlyDate;
+  const response = infoTeam?.games.filter((_e) => {
+    // return e.date === onlyDate;
   });
 
   return response;
@@ -66,11 +67,11 @@ export const getGameByIdService = async (id: string) => {
   return response;
 };
 
-export const getGameByDateService = async (id: string, date: string) => {
+export const getGameByDateService = async (id: string, _date: string) => {
   const getGame = await TeamModel.findById(id);
 
-  const response = getGame?.games.filter((e) => {
-    return e.date === date;
+  const response = getGame?.games.filter((_e) => {
+    // return e.date === date;
   });
 
   return response;
@@ -89,4 +90,20 @@ export const getTeamThatScoredTheMostGoalsService = async (id: string) => {
   // return
 
   return majorScored;
+};
+
+export const gamesByDateRangeService = async (
+  id: string,
+  from: string,
+  to: string
+) => {
+  const infoTeam = await TeamModel.findById(id);
+
+  const gamesInfo = infoTeam?.games;
+
+  const filterDate = gamesInfo?.filter(
+    (e) => e.date >= new Date(from) && e.date <= new Date(to)
+  );
+
+  return filterDate;
 };
