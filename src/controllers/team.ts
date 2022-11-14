@@ -8,6 +8,7 @@ import {
   getGameByDateService,
   getTeamThatScoredTheMostGoalsService,
   gamesByDateRangeService,
+  getPointsByDateRangeService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
 // import { validateDate } from "../utils/validations";
@@ -138,5 +139,20 @@ export const gamesByDateRange = async (req: Request, res: Response) => {
     return res.status(200).json(response);
   } catch (error) {
     return handleHttp(res, "Error getting games by date range", error);
+  }
+};
+
+export const getPointsByDateRange = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { from, to } = req.body;
+
+    const response = await getPointsByDateRangeService(id, from, to);
+
+    return res.status(200).json({
+      msg: `The number of points obtained in the date range is: ${response}`,
+    });
+  } catch (error) {
+    return handleHttp(res, "Error getting point by date range", error);
   }
 };
