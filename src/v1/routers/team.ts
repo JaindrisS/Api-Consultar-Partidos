@@ -8,6 +8,7 @@ import {
   getGameByDate,
   getTeamThatScoredTheMostGoals,
   gamesByDateRange,
+  getPointsByDateRange,
 } from "../../controllers/team";
 import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
@@ -67,6 +68,19 @@ app
       validateField,
     ],
     gamesByDateRange
+  )
+
+  .get(
+    "/points-by-date-range/:id",
+    [
+      param("id", "Enter a Valid id").custom(idTeam),
+      body("from").custom(validateDate),
+      body(["from", "to"], "Enter a valid date example: YYYY-MM-DD")
+        .notEmpty()
+        .isDate({ format: "YYYY-MM-DD", strictMode: true }),
+      validateField,
+    ],
+    getPointsByDateRange
   )
 
   .post(
