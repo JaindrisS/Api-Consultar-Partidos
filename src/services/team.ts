@@ -71,7 +71,7 @@ export const getGameByDateService = async (id: string, _date: string) => {
   const getGame = await TeamModel.findById(id);
 
   const response = getGame?.games.filter((_e) => {
-    // return e.date === date;
+    // return e.date === new Date(date);
   });
 
   return response;
@@ -106,4 +106,27 @@ export const gamesByDateRangeService = async (
   );
 
   return filterDate;
+};
+
+export const getPointsByDateRangeService = async (
+  id: string,
+  from: string,
+  to: string
+) => {
+  const infoTeam = await TeamModel.findById(id);
+
+  // extract the games
+  const games = infoTeam?.games;
+
+  // return games by date range
+  const filterDate = games?.filter(
+    (e) => e.date >= new Date(from) && e.date <= new Date(to)
+  );
+
+  // add up all the points
+  const totalPoints = filterDate
+    ?.map((e) => e.points)
+    .reduce((prev, curr) => prev + curr, 0);
+
+  return totalPoints;
 };
