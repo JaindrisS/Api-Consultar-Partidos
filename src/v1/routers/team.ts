@@ -27,14 +27,7 @@ app
 
   .get(
     "/last-game/:id",
-    [
-      param("id", "Enter a valid id").isMongoId().custom(idTeam),
-      body("date", "Enter a valid date example: YYYY-MM-DD")
-        .notEmpty()
-        .isDate({ format: "YYYY-MM-DD", strictMode: true }),
-
-      validateField,
-    ],
+    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
     getLastGame
   )
 
