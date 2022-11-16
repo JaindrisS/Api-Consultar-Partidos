@@ -52,8 +52,8 @@ export const getLastGameService = async (id: string) => {
   const onlyDate = dateString.substring(0, 10);
 
   // return the match that is equal to the given date
-  const response = infoTeam?.games.filter((_e) => {
-    // return e.date === onlyDate;
+  const response = infoTeam?.games.filter((e) => {
+    return e.date === new Date(onlyDate);
   });
 
   return response;
@@ -67,12 +67,14 @@ export const getGameByIdService = async (id: string) => {
   return response;
 };
 
-export const getGameByDateService = async (id: string, _date: string) => {
-  const getGame = await TeamModel.findById(id);
+export const getGameByDateService = async (id: string, date: string) => {
+  const infoTeam = await TeamModel.findById(id);
 
-  const response = getGame?.games.filter((_e) => {
-    // return e.date === new Date(date);
-  });
+  const infoGames = infoTeam?.games;
+
+  const response = infoGames?.filter(
+    (e) => e.date.getTime() === new Date(date).getTime()
+  );
 
   return response;
 };
