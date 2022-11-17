@@ -37,23 +37,13 @@ export const getLastGameService = async (id: string) => {
   const infoTeam = await TeamModel.findById(id);
 
   // traverse and save the dates of the array
-  const dateTeam = infoTeam?.games.map((e) => {
-    return e.date;
-  });
+  const dateTeam: any = infoTeam?.games.map((e) => e.date);
 
   //check major date
-  const date: any = dateTeam?.map((e) => new Date(e));
-  const dateMax = new Date(Math.max.apply(null, date));
+  const dateMax = new Date(Math.max.apply(null, dateTeam));
 
-  // Transform to string
-  const dateString = dateMax.toISOString();
-
-  // get only the date
-  const onlyDate = dateString.substring(0, 10);
-
-  // return the match that is equal to the given date
   const response = infoTeam?.games.filter((e) => {
-    return e.date === new Date(onlyDate);
+    return e.date.getTime() === dateMax.getTime();
   });
 
   return response;
