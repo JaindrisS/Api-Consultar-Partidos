@@ -1,4 +1,5 @@
 import { TeamModel } from "../models/team";
+import { UserModel } from "../models/user";
 
 export const nameTeamExists = async (name: string) => {
   const nameExists = await TeamModel.findOne({
@@ -15,5 +16,15 @@ export const idTeam = async (id: string) => {
 
   if (!response) {
     throw new Error(`The Id does not exists in the database`);
+  }
+};
+
+export const emailAlreadyExists = async (email: string) => {
+  const response = await UserModel.findOne({
+    email: { $regex: email, $options: "i" },
+  });
+
+  if (response) {
+    throw new Error("The email already exists ,not available");
   }
 };
