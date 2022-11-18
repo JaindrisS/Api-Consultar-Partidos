@@ -1,5 +1,7 @@
 import express, { Application } from "express";
 import gamesRouters from "../v1/routers/team";
+import authRouters from "../v1/routers/auth";
+
 import { dbConnect } from "../config/dbConnect";
 
 export default class Server {
@@ -7,6 +9,7 @@ export default class Server {
   private port: string;
   private path = {
     games: "/api/v1/games",
+    auth: "/api/v1/auth",
   };
 
   constructor() {
@@ -27,6 +30,7 @@ export default class Server {
 
   router() {
     this.app.use(this.path.games, gamesRouters);
+    this.app.use(this.path.auth, authRouters);
   }
 
   listen() {
