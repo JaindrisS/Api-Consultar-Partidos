@@ -4,3 +4,5 @@ export interface User {
   email: string;
   status: boolean;
 }
+
+export type LogIn = Pick<User, "email" | "password">;
