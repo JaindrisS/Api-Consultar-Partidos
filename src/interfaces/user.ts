@@ -3,6 +3,7 @@ export interface User {
   password: string;
   email: string;
   status: boolean;
+  resetpassword?: string;
 }
 
 export type LogIn = Pick<User, "email" | "password">;
