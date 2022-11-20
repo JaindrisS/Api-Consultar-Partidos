@@ -1,6 +1,8 @@
 import { User, LogIn } from "../interfaces/user";
 import { UserModel } from "../models/user";
 import { comparePassword, hash } from "../utils/bcript";
+import { sendEmail } from "../utils/emailer";
+import { generateJwt } from "../utils/generateJwt";
 
 export const signUpService = async (data: User) => {
   const { password, email, name } = data;
@@ -36,4 +38,28 @@ export const logInService = async (data: LogIn) => {
   }
 
   return "Login Ok";
+};
+
+export const forgotPasswordService = async (email: string) => {
+  let message = ` The code to reset your password was sent to your email address ${email} `;
+
+  // Get the user by mail
+  const user: any = await UserModel.findOne({
+    email: { $regex: email, $options: "i" },
+  });
+
+  // generate jwt with user.id
+  let token: any = await generateJwt(user?.id);
+
+  // save token in verification variable
+  let verification: string = token;
+
+  // Save token in user reserpassword field
+  user.resetpassword = token;
+
+  // Send verification token to user's email address
+  await sendEmail(user, verification);
+  await user.save();
+
+  return message;
 };

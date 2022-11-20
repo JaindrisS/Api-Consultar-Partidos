@@ -1,5 +1,9 @@
 import { Response, Request } from "express";
-import { logInService, signUpService } from "../services/auth";
+import {
+  forgotPasswordService,
+  logInService,
+  signUpService,
+} from "../services/auth";
 import { handleHttp } from "../utils/error.handle";
 
 export const signUp = async (
@@ -26,5 +30,20 @@ export const logIn = async (req: Request, res: Response): Promise<Response> => {
     return res.status(200).json({ msg: response });
   } catch (error) {
     return handleHttp(res, "Login Error", error);
+  }
+};
+
+export const forgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { email } = req.body;
+
+    const response = await forgotPasswordService(email);
+
+    return res.status(201).json(response);
+  } catch (error) {
+    return handleHttp(res, "Error trying to recover password", error);
   }
 };
