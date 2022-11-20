@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { logIn, signUp } from "../../controllers/auth";
+import { forgotPassword, logIn, signUp } from "../../controllers/auth";
 import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
-import { emailAlreadyExists } from "../../utils/dbValidations";
+import {
+  emailAlreadyExists,
+  emailDoesNotExist,
+} from "../../utils/dbValidations";
 
 const app = Router();
 
@@ -28,6 +31,16 @@ app
       validateField,
     ],
     logIn
+  )
+
+  .put(
+    "/forgot-password",
+    [
+      body("email", "Enter an email").notEmpty().isEmail(),
+      body("email").custom(emailDoesNotExist),
+      validateField,
+    ],
+    forgotPassword
   );
 
 export default app;
