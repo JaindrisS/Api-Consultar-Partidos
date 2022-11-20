@@ -18,6 +18,10 @@ const userSchema = new Schema<User>(
       type: String,
     },
 
+    resetpassword: {
+      type: String,
+    },
+
     status: {
       type: Boolean,
       default: true,
