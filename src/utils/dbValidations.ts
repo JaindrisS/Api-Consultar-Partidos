@@ -28,3 +28,13 @@ export const emailAlreadyExists = async (email: string) => {
     throw new Error("The email already exists ,not available");
   }
 };
+
+export const emailDoesNotExist = async (email: string) => {
+  const response = await UserModel.findOne({
+    email: { $regex: email, $options: "i" },
+  });
+
+  if (!response) {
+    throw new Error("The email does not exist, Enter a valid email");
+  }
+};
