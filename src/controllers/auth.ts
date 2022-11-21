@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import {
   forgotPasswordService,
   logInService,
+  resetPasswordService,
   signUpService,
 } from "../services/auth";
 import { handleHttp } from "../utils/error.handle";
@@ -45,5 +46,20 @@ export const forgotPassword = async (
     return res.status(201).json(response);
   } catch (error) {
     return handleHttp(res, "Error trying to recover password", error);
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+  const { password } = req.body;
+  const token = <string>req.header("token");
+  const response = await resetPasswordService(password, token);
+  if (response === false) {
+    return res.status(401).json("Invalid token");
+  }
+  return res.status(201).json(response);
+    
+  } catch (error) {
+    return handleHttp(res, "Error when trying to change the password",error);
   }
 };
