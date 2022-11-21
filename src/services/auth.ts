@@ -3,6 +3,8 @@ import { UserModel } from "../models/user";
 import { comparePassword, hash } from "../utils/bcript";
 import { sendEmail } from "../utils/emailer";
 import { generateJwt } from "../utils/generateJwt";
+import jwt from "jsonwebtoken";
+import { Response } from "express";
 
 export const signUpService = async (data: User) => {
   const { password, email, name } = data;
@@ -60,6 +62,23 @@ export const forgotPasswordService = async (email: string) => {
   // Send verification token to user's email address
   await sendEmail(user, verification);
   await user.save();
+  console.log(verification);
 
-  return message;
+  return { message };
+};
+
+export const resetPasswordService = async (password: string, token: string) => {
+  
+  const user = await UserModel.findOne({ resetpassword: token });
+
+  if (!user) {
+    return false;
+  }
+
+  const passwordHash = await hash(10, password);
+  user.password = passwordHash;
+  user.resetpassword = undefined;
+  await user.save();
+
+  return { msg: "Password changed" };
 };
