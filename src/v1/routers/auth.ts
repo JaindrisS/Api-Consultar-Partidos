@@ -1,11 +1,17 @@
 import { Router } from "express";
-import { forgotPassword, logIn, signUp } from "../../controllers/auth";
+import {
+  forgotPassword,
+  logIn,
+  resetPassword,
+  signUp,
+} from "../../controllers/auth";
 import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
 import {
   emailAlreadyExists,
   emailDoesNotExist,
 } from "../../utils/dbValidations";
+import { validateJwt } from "../../middlewares/validateJwt";
 
 const app = Router();
 
@@ -41,6 +47,18 @@ app
       validateField,
     ],
     forgotPassword
+  )
+
+  .put(
+    "/reset-password",
+    validateJwt,
+    [
+      body("password", "Enter a valid password minimum 6 values maximum 14 ")
+        .notEmpty()
+        .isLength({ min: 6, max: 14 }),
+      validateField,
+    ],
+    resetPassword
   );
 
 export default app;
