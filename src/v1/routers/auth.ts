@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changePassword,
   forgotPassword,
   logIn,
   resetPassword,
@@ -10,6 +11,7 @@ import { validateField } from "../../middlewares/validateresult";
 import {
   emailAlreadyExists,
   emailDoesNotExist,
+  idDoesNotExist,
 } from "../../utils/dbValidations";
 import { validateJwt } from "../../middlewares/validateJwt";
 
@@ -59,6 +61,22 @@ app
       validateField,
     ],
     resetPassword
+  )
+
+  .put(
+    "/change-password/:id",
+    validateJwt,
+    [
+      param("id", "Enter a valid id").isMongoId().custom(idDoesNotExist),
+      body(
+        ["currentPassword", "newPassword", "confirmPassword"],
+        "Enter a valid password minimum 6 values maximum 14 "
+      )
+        .notEmpty()
+        .isLength({ min: 6, max: 14 }),
+      validateField,
+    ],
+    changePassword
   );
 
 export default app;
