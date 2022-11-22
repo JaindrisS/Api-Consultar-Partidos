@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import {
+  changePasswordService,
   forgotPasswordService,
   logInService,
   resetPasswordService,
@@ -51,15 +52,31 @@ export const forgotPassword = async (
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-  const { password } = req.body;
-  const token = <string>req.header("token");
-  const response = await resetPasswordService(password, token);
-  if (response === false) {
-    return res.status(401).json("Invalid token");
-  }
-  return res.status(201).json(response);
-    
+    const { password } = req.body;
+    const token = <string>req.header("token");
+    const response = await resetPasswordService(password, token);
+    if (response === false) {
+      return res.status(401).json("Invalid token");
+    }
+    return res.status(201).json(response);
   } catch (error) {
-    return handleHttp(res, "Error when trying to change the password",error);
+    return handleHttp(res, "Error when trying to change the password", error);
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const { message, status } = await changePasswordService(
+      id,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    );
+
+    return res.status(status).json({ message });
+  } catch (error) {
+    return handleHttp(res, "Error when trying to change the password", error);
   }
 };
