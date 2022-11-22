@@ -38,8 +38,9 @@ export const logInService = async (data: LogIn) => {
   if (!userValid) {
     return { msg: "Invalid email or password" };
   }
+  const token = await generateJwt(user.id);
 
-  return "Login Ok";
+  return { message: "Login Ok", token };
 };
 
 export const forgotPasswordService = async (email: string) => {
@@ -68,7 +69,6 @@ export const forgotPasswordService = async (email: string) => {
 };
 
 export const resetPasswordService = async (password: string, token: string) => {
-  
   const user = await UserModel.findOne({ resetpassword: token });
 
   if (!user) {
@@ -81,4 +81,35 @@ export const resetPasswordService = async (password: string, token: string) => {
   await user.save();
 
   return { msg: "Password changed" };
+};
+
+export const changePasswordService = async (
+  id: string,
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string
+) => {
+  const user = await UserModel.findById({ _id: id });
+
+  if (!user) {
+    return { message: "The user does not exist", status: 400 };
+  }
+
+  const passValid = await comparePassword(
+    currentPassword,
+    <string>user.password
+  );
+
+  if (!passValid) {
+    return { message: "Invalid Password", status: 401 };
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { message: "Passwords do not match", status: 401 };
+  }
+
+  user.password = await hash(10, newPassword);
+  await user.save();
+
+  return { message: "Password has been changed successfully", status: 201 };
 };
