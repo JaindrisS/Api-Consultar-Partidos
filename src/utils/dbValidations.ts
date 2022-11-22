@@ -38,3 +38,11 @@ export const emailDoesNotExist = async (email: string) => {
     throw new Error("The email does not exist, Enter a valid email");
   }
 };
+
+export const idDoesNotExist = async (id: string) => {
+  const response = await UserModel.findById(id);
+
+  if (!response) {
+    throw new Error("The id does not exist, Enter a valid id");
+  }
+};
