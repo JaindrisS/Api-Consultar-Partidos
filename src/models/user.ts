@@ -26,6 +26,11 @@ const userSchema = new Schema<User>(
       type: Boolean,
       default: true,
     },
+
+    rol: {
+      type: String,
+      default: "USER",
+    },
   },
   {
     versionKey: false,
