@@ -14,26 +14,41 @@ import { body, param } from "express-validator";
 import { validateField } from "../../middlewares/validateresult";
 import { idTeam, nameTeamExists } from "../../utils/dbValidations";
 import { validateDate } from "../../utils/validations";
+import { hasRol } from "../../middlewares/validateRol";
+import { validateJwt } from "../../middlewares/validateJwt";
+
 const app = Router();
 
 app
-  .get("/", getTeam)
+  .get("/", [validateJwt, hasRol("USER", "ADMIN")], getTeam)
 
   .get(
     "/:id",
-    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
+    [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
+      param("id", "Enter a valid id").isMongoId().custom(idTeam),
+      validateField,
+    ],
     getGameById
   )
 
   .get(
     "/last-game/:id",
-    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
+    [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
+      param("id", "Enter a valid id").isMongoId().custom(idTeam),
+      validateField,
+    ],
     getLastGame
   )
 
   .get(
     "/search-by-date/:id",
     [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
       param("id", "Enter a valid Id").notEmpty().custom(idTeam),
       body("date").custom(validateDate),
       body("date", "Enter a valid date example: YYYY-MM-DD")
@@ -46,13 +61,20 @@ app
 
   .get(
     "/team-that-scored-more-goals/:id",
-    [param("id", "Enter a valid id").isMongoId().custom(idTeam), validateField],
+    [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
+      param("id", "Enter a valid id").isMongoId().custom(idTeam),
+      validateField,
+    ],
     getTeamThatScoredTheMostGoals
   )
 
   .get(
     "/games-by-date-range/:id",
     [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
       param("id", "Enter a Valid id").custom(idTeam),
       body("from").custom(validateDate),
       body(["from", "to"], "Enter a valid date example: YYYY-MM-DD")
@@ -66,6 +88,8 @@ app
   .get(
     "/points-by-date-range/:id",
     [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
       param("id", "Enter a Valid id").custom(idTeam),
       body("from").custom(validateDate),
       body(["from", "to"], "Enter a valid date example: YYYY-MM-DD")
@@ -79,6 +103,8 @@ app
   .post(
     "/",
     [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
       body("name", "Enter a name").notEmpty().custom(nameTeamExists),
       body("rival", "Enter a rival").notEmpty(),
       body("goalsConceded", "Enter a value").isNumeric().notEmpty(),
@@ -97,6 +123,8 @@ app
   .put(
     "/add-games/:id",
     [
+      validateJwt,
+      hasRol("USER", "ADMIN"),
       param("id", "Enter a valid id").isMongoId().custom(idTeam),
       body("rival", "Enter a rival").notEmpty(),
       body("goalsConceded", "Enter a value").isNumeric().notEmpty(),
