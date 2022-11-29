@@ -4,6 +4,7 @@ export interface User {
   email: string;
   status: boolean;
   resetpassword?: string;
+  rol: "ADMIN" | "USER";
 }
 
 export type LogIn = Pick<User, "email" | "password">;
