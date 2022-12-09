@@ -31,6 +31,10 @@ const userSchema = new Schema<User>(
       type: String,
       default: "USER",
     },
+
+    img: {
+      type: String,
+    },
   },
   {
     versionKey: false,
