@@ -1,4 +1,5 @@
 import { Response, Request, request } from "express";
+import { setCache } from "../middlewares/node-cache";
 import {
   createTeamService,
   getTeamService,
@@ -11,7 +12,6 @@ import {
   getPointsByDateRangeService,
 } from "../services/team";
 import { handleHttp } from "../utils/error.handle";
-// import { validateDate } from "../utils/validations";
 
 export const createTeam = async (
   req: Request,
@@ -41,9 +41,11 @@ export const createTeam = async (
   }
 };
 
-export const getTeam = async (_req: Request, res: Response) => {
+export const getTeam = async (req: Request, res: Response) => {
   try {
     const response = await getTeamService();
+
+    setCache(req.originalUrl, response);
 
     return res.status(200).json(response);
   } catch (error) {
@@ -75,6 +77,7 @@ export const getLastGame = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const response = await getLastGameService(id);
+    setCache(req.originalUrl, response);
 
     return res.status(200).json(response);
   } catch (error) {
@@ -115,6 +118,8 @@ export const getTeamThatScoredTheMostGoals = async (
     const { id } = req.params;
 
     const response = await getTeamThatScoredTheMostGoalsService(id);
+
+    setCache(req.originalUrl, response);
 
     return res.status(200).json(response);
   } catch (error) {
