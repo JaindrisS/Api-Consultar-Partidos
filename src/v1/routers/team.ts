@@ -16,11 +16,12 @@ import { idTeam, nameTeamExists } from "../../utils/dbValidations";
 import { validateDate } from "../../utils/validations";
 import { hasRol } from "../../middlewares/validateRol";
 import { validateJwt } from "../../middlewares/validateJwt";
+import { getCache } from "../../middlewares/node-cache";
 
 const app = Router();
 
 app
-  .get("/", [validateJwt, hasRol("USER", "ADMIN")], getTeam)
+  .get("/", [validateJwt, getCache, hasRol("USER", "ADMIN")], getTeam)
 
   .get(
     "/:id",
@@ -37,6 +38,7 @@ app
     "/last-game/:id",
     [
       validateJwt,
+      getCache,
       hasRol("USER", "ADMIN"),
       param("id", "Enter a valid id").isMongoId().custom(idTeam),
       validateField,
@@ -48,6 +50,7 @@ app
     "/search-by-date/:id",
     [
       validateJwt,
+      
       hasRol("USER", "ADMIN"),
       param("id", "Enter a valid Id").notEmpty().custom(idTeam),
       body("date").custom(validateDate),
@@ -63,6 +66,7 @@ app
     "/team-that-scored-more-goals/:id",
     [
       validateJwt,
+      getCache,
       hasRol("USER", "ADMIN"),
       param("id", "Enter a valid id").isMongoId().custom(idTeam),
       validateField,
